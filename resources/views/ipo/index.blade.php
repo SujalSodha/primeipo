@@ -4,7 +4,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IPO Dashboard</title>
+
+    {{-- Primary Meta --}}
+    <title>Prime IPO – Live IPO GMP, Upcoming & Closed IPOs India</title>
+    <meta name="description"
+        content="Track live IPO GMP (Grey Market Premium), upcoming IPOs, open IPOs, and closed IPOs in India. Check allotment status, price band, lot size and listing dates on Prime IPO.">
+    <meta name="keywords"
+        content="IPO GMP, Grey Market Premium, upcoming IPO 2025, live IPO, IPO allotment status, IPO listing date, SME IPO, mainboard IPO, India IPO">
+    <meta name="author" content="Prime IPO">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://www.primeipo.in/">
+
+    {{-- Open Graph (Facebook, WhatsApp, LinkedIn) --}}
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.primeipo.in/">
+    <meta property="og:title" content="Prime IPO – Live IPO GMP, Upcoming & Closed IPOs India">
+    <meta property="og:description"
+        content="Track live IPO GMP, upcoming IPOs and allotment status in India. Real-time Grey Market Premium data for all mainboard and SME IPOs.">
+    <meta property="og:image" content="https://www.primeipo.in/og-image.png">
+    <meta property="og:site_name" content="Prime IPO">
+    <meta property="og:locale" content="en_IN">
+
+    {{-- Twitter Card --}}
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://www.primeipo.in/">
+    <meta name="twitter:title" content="Prime IPO – Live IPO GMP, Upcoming & Closed IPOs India">
+    <meta name="twitter:description" content="Track live IPO GMP, upcoming IPOs and allotment status in India.">
+    <meta name="twitter:image" content="https://www.primeipo.in/og-image.png">
+
+    {{-- Schema.org JSON-LD --}}
     <script src="https://cdn.tailwindcss.com"></script>
     <link
         href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap"
@@ -349,8 +377,8 @@
                             d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" />
                     </svg>
                 </div>
-                <span class="font-display text-lg font-bold text-main tracking-tight">IPO <span
-                        class="text-green-500">Hub</span></span>
+                <span class="font-display text-lg font-bold text-main tracking-tight">Prime <span
+                        class="text-green-500">IPO</span></span>
             </div>
 
             {{-- Search --}}
@@ -435,11 +463,13 @@
                     <table class="w-full text-sm" style="min-width:680px">
                         <thead>
                             <tr class="border-b border-c text-left">
-                                <th class="px-4 py-3.5 text-xs uppercase tracking-wider text-muted font-semibold w-10">#
+                                <th class="px-4 py-3.5 text-xs uppercase tracking-wider text-muted font-semibold w-10">
+                                    #
                                 </th>
                                 <th class="px-3 py-3.5 text-xs uppercase tracking-wider text-muted font-semibold">
                                     Company</th>
-                                <th class="px-3 py-3.5 text-xs uppercase tracking-wider text-muted font-semibold">Status
+                                <th class="px-3 py-3.5 text-xs uppercase tracking-wider text-muted font-semibold">
+                                    Status
                                 </th>
                                 <th class="px-3 py-3.5 text-xs uppercase tracking-wider text-muted font-semibold">Price
                                     Band</th>
@@ -501,11 +531,16 @@
                                     </td>
 
                                     <td class="px-3 py-3.5">
+                                        @php
+                                            $badgeClass =
+                                                $status === 'open'
+                                                    ? 'badge-open'
+                                                    : ($status === 'upcoming'
+                                                        ? 'badge-upcoming'
+                                                        : 'badge-closed');
+                                        @endphp
                                         <span
-                                            class="px-2.5 py-1 rounded-lg text-xs font-bold uppercase tracking-wide
-                                    @if ($status === 'open') badge-open
-                                    @elseif($status === 'upcoming') badge-upcoming
-                                    @else badge-closed @endif">
+                                            class="px-2.5 py-1 rounded-lg text-xs font-bold uppercase tracking-wide {{ $badgeClass }}">
                                             {{ $status }}
                                         </span>
                                     </td>
@@ -598,18 +633,23 @@
                                     onerror="this.style.display='none'">
                             @endif
                             <div class="flex-1 min-w-0">
-                                <div class="font-semibold text-main text-sm leading-snug">{{ $ipo['name'] ?? '—' }}
-                                </div>
+                                <a href="/ipo/{{ $ipo['id'] }}/{{ $ipo['slug'] }}"
+                                    class="font-semibold text-main text-sm leading-snug hover:text-green-500 transition-colors block">{{ $ipo['name'] ?? '—' }}</a>
                                 @if (!empty($ipo['lead_managers']))
                                     <div class="text-xs text-muted mt-0.5 truncate">
                                         {{ implode(', ', array_slice($ipo['lead_managers'], 0, 1)) }}</div>
                                 @endif
                             </div>
+                            @php
+                                $badgeClass =
+                                    $status === 'open'
+                                        ? 'badge-open'
+                                        : ($status === 'upcoming'
+                                            ? 'badge-upcoming'
+                                            : 'badge-closed');
+                            @endphp
                             <span
-                                class="px-2.5 py-1 rounded-lg text-xs font-bold uppercase tracking-wide flex-shrink-0
-                        @if ($status === 'open') badge-open
-                        @elseif($status === 'upcoming') badge-upcoming
-                        @else badge-closed @endif">
+                                class="px-2.5 py-1 rounded-lg text-xs font-bold uppercase tracking-wide flex-shrink-0 {{ $badgeClass }}">
                                 {{ $status }}
                             </span>
                         </div>
@@ -683,7 +723,8 @@
     <footer class="border-t border-c mt-12">
         <div class="max-w-7xl mx-auto px-4 py-5 flex items-center justify-between text-xs text-muted">
             <span class="font-display font-semibold text-sub">IPO Hub</span>
-            <span>© {{ date('Y') }} · Data sourced from IPO Premium</span>
+            <span>© {{ date('Y') }} Prime IPO · Developed by <span class="text-green-500 font-semibold">Sujal
+                    Sodha</span></span>
         </div>
     </footer>
 

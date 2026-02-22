@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en" >
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $data['h1'] ?? 'IPO Detail' }} — IPO Hub</title>
+    <title>{{ $data['h1'] ?? 'IPO Detail' }} — Prime IPO</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link
         href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap"
@@ -345,8 +345,8 @@
                             d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" />
                     </svg>
                 </div>
-                <span class="font-display text-lg font-bold text-main tracking-tight">IPO <span
-                        class="text-green-500">Hub</span></span>
+                <span class="font-display text-lg font-bold text-main tracking-tight">Prime <span
+                        class="text-green-500">IPO</span></span>
             </a>
 
             <div class="flex-1 min-w-0">
@@ -369,7 +369,7 @@
                         clip-rule="evenodd" />
                 </svg>
                 <label class="switch">
-                    <input type="checkbox" id="themeToggle" checked>
+                    <input type="checkbox" id="themeToggle">
                     <span class="slider"></span>
                 </label>
             </div>
@@ -911,7 +911,7 @@
 
     <footer class="border-t bdr mt-4">
         <div class="max-w-7xl mx-auto px-4 py-5 flex items-center justify-between text-xs text-dim">
-            <span class="font-display font-semibold text-sub">IPO Hub</span>
+            <span class="font-display font-semibold text-sub">Prime IPO</span>
             <span>© {{ date('Y') }} · GMP data is indicative, not financial advice.</span>
         </div>
     </footer>
@@ -933,7 +933,7 @@
                 iconMoon.classList.add('hidden');
             }
         }
-        applyTheme(true);
+        applyTheme(false);
         toggle.addEventListener('change', () => applyTheme(toggle.checked));
     </script>
 </body>
