@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libxml2-dev
 
-# Install PHP extensions required by Laravel
+# Install PHP extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install \
         pdo \
@@ -26,10 +26,10 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
         bcmath \
         gd
 
-# Enable Apache rewrite module
+# Enable Apache rewrite
 RUN a2enmod rewrite
 
-# Set Apache document root to Laravel public folder
+# Set Apache document root
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' \
@@ -40,17 +40,25 @@ RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' \
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Copy Laravel project files
-COPY . /var/www/html
+# Copy project
+COPY . .
 
-# Install dependencies
-RUN composer install --no-dev --optimize-autoloader
+# Install dependencies (non interactive)
+RUN composer install --no-dev --optimize-autoloader --no-interaction
 
-# Set correct permissions
-RUN chown -R www-data:www-data storage bootstrap/cache
+# Ensure Laravel required directories exist
+RUN mkdir -p \
+    storage/framework/cache \
+    storage/framework/sessions \
+    storage/framework/views \
+    storage/logs \
+    bootstrap/cache
+
+# Set permissions
+RUN chown -R www-data:www-data storage bootstrap/cache \
+    && chmod -R 775 storage bootstrap/cache
 
 # Expose port
 EXPOSE 80
 
-# Start Apache
 CMD ["apache2-foreground"]
