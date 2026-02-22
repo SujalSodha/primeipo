@@ -18,6 +18,11 @@ Route::prefix('ipo')->group(function () {
     Route::get('/{id}/{slug}', [ScraperController::class, 'detail']);
 });
 
+
+Route::get('/ping', function () {
+    return response()->json(['status' => 'ok', 'time' => now()]);
+});
+
 // routes/api.php — temporary debug
 Route::get('/ipo/debug', function () {
     $jar = new \GuzzleHttp\Cookie\CookieJar();
