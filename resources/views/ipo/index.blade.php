@@ -18,7 +18,7 @@
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://www.primeipo.in/">
 
-    {{-- Open Graph (Facebook, WhatsApp, LinkedIn) --}}
+    {{-- Open Graph --}}
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://www.primeipo.in/">
     <meta property="og:title" content="Prime IPO – Live IPO GMP, Upcoming & Closed IPOs India">
@@ -35,7 +35,6 @@
     <meta name="twitter:description" content="Track live IPO GMP, upcoming IPOs and allotment status in India.">
     <meta name="twitter:image" content="https://www.primeipo.in/og-image.png">
 
-    {{-- Schema.org JSON-LD --}}
     <script src="https://cdn.tailwindcss.com"></script>
     <link
         href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap"
@@ -242,7 +241,78 @@
             box-shadow: 0 0 20px rgba(34, 197, 94, .3);
         }
 
-        /* ── THEME SWITCH ── */
+        /* ── TYPE BADGES ── */
+        .badge-mainboard {
+            display: inline-block;
+            background: #0c1a3a;
+            color: #93c5fd;
+            border: 1px solid #1e3a6e;
+            font-size: 10px;
+            padding: 1px 5px;
+            border-radius: 4px;
+            font-weight: 700;
+            letter-spacing: .04em;
+            text-transform: uppercase;
+        }
+
+        .badge-sme {
+            display: inline-block;
+            background: #1a0c3a;
+            color: #c4b5fd;
+            border: 1px solid #3e1e6e;
+            font-size: 10px;
+            padding: 1px 5px;
+            border-radius: 4px;
+            font-weight: 700;
+            letter-spacing: .04em;
+            text-transform: uppercase;
+        }
+
+        .dark .badge-mainboard {
+            background: #0c1a3a;
+            color: #93c5fd;
+            border-color: #1e3a6e;
+        }
+
+        .dark .badge-sme {
+            background: #1a0c3a;
+            color: #c4b5fd;
+            border-color: #3e1e6e;
+        }
+
+        /* ── MOBILE CARD FIX ── */
+        .mobile-ipo-card {
+            min-width: 0;
+            overflow: hidden;
+        }
+
+        .mobile-ipo-card .inner-bg {
+            min-width: 0;
+            overflow: hidden;
+        }
+
+        /* Ensure 3-col grid cells never overflow on tiny screens */
+        @media (max-width: 380px) {
+            .mobile-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+        }
+
+        /* ── FILTER SEPARATOR ── */
+        .filter-sep {
+            display: inline-block;
+            width: 1px;
+            height: 22px;
+            background: #e2e8f0;
+            margin: 0 4px;
+            vertical-align: middle;
+        }
+
+        .dark .filter-sep {
+            background: #1e2230;
+        }
+
+        /* ── SWITCH ── */
         .switch {
             position: relative;
             width: 50px;
@@ -323,7 +393,7 @@
             opacity: 0;
         }
 
-        /* ── RESPONSIVE LAYOUT ── */
+        /* ── RESPONSIVE ── */
         .desktop-table {
             display: block;
         }
@@ -342,14 +412,12 @@
             }
         }
 
-        /* focus ring */
         input[type=text]:focus {
             outline: none;
             border-color: #22c55e !important;
             box-shadow: 0 0 0 3px rgba(34, 197, 94, .15);
         }
 
-        /* thin scrollbar */
         .tbl-scroll::-webkit-scrollbar {
             height: 3px;
         }
@@ -460,31 +528,64 @@
             </div>
         </section>
 
-        {{-- ══════ TABS ══════ --}}
-        <section class="mb-5 fade-up d1 flex flex-wrap gap-2">
-            @foreach (['all', 'open', 'upcoming', 'closed'] as $tab)
-                <button onclick="filterStatus('{{ $tab }}')" id="tab-{{ $tab }}"
-                    class="tab-btn {{ $tab === 'all' ? 'tab-active' : 'tab-idle' }} px-4 py-2 rounded-xl text-sm capitalize font-semibold transition-all">
-                    {{ ucfirst($tab) }}
-                </button>
-            @endforeach
+        {{-- ══════ FILTERS ══════ --}}
+        {{-- CHANGE 1: Two rows of filters — Type above Status --}}
+        <section class="mb-5 fade-up d1 space-y-2">
+
+            {{-- Row 1: Type filter (Mainboard / SME) — shown ABOVE status --}}
+            <div class="flex flex-wrap items-center gap-2">
+                <span class="text-xs font-semibold text-muted uppercase tracking-wider w-12 flex-shrink-0">Type</span>
+                @foreach (['all' => 'All', 'mainboard' => '🏛 Mainboard', 'sme' => '🏢 SME'] as $type => $label)
+                    <button onclick="filterType('{{ $type }}')" id="type-{{ $type }}"
+                        class="type-btn {{ $type === 'all' ? 'tab-active' : 'tab-idle' }} px-4 py-1.5 rounded-xl text-sm font-semibold transition-all">
+                        {{ $label }}
+                    </button>
+                @endforeach
+            </div>
+
+            {{-- Row 2: Status filter --}}
+            <div class="flex flex-wrap items-center gap-2">
+                <span
+                    class="text-xs font-semibold text-muted uppercase tracking-wider w-12 flex-shrink-0">Status</span>
+                @foreach (['all' => 'All', 'open' => 'Open', 'upcoming' => 'Upcoming', 'closed' => 'Closed'] as $tab => $label)
+                    <button onclick="filterStatus('{{ $tab }}')" id="tab-{{ $tab }}"
+                        class="tab-btn {{ $tab === 'all' ? 'tab-active' : 'tab-idle' }} px-4 py-1.5 rounded-xl text-sm capitalize font-semibold transition-all">
+                        {{ $label }}
+                    </button>
+                @endforeach
+                <span id="filterCount" class="ml-auto text-xs text-muted"></span>
+            </div>
+
         </section>
 
         {{-- ══════ DESKTOP TABLE ══════ --}}
         <section class="fade-up d2 desktop-table">
             <div class="bg-card-d border border-c rounded-2xl overflow-hidden">
                 <div class="tbl-scroll">
-                    <table class="w-full text-sm" style="min-width:680px">
+                    <table class="w-full text-sm" style="min-width:780px; table-layout:fixed;">
+                        {{-- Fixed column widths: stops #/Check columns from stretching --}}
+                        <colgroup>
+                            <col style="width:44px"> {{-- # --}}
+                            <col style="width:260px"> {{-- Company --}}
+                            <col style="width:90px"> {{-- Status --}}
+                            <col style="width:100px"> {{-- Price Band --}}
+                            <col style="width:80px"> {{-- GMP --}}
+                            <col style="width:56px"> {{-- Lot --}}
+                            <col style="width:90px"> {{-- Issue Size (lg) --}}
+                            <col style="width:88px"> {{-- Open (lg) --}}
+                            <col style="width:88px"> {{-- Close (lg) --}}
+                            <col style="width:88px"> {{-- Allotment (xl) --}}
+                            <col style="width:88px"> {{-- Listing (xl) --}}
+                            <col style="width:110px"> {{-- Allotment Check --}}
+                        </colgroup>
                         <thead>
                             <tr class="border-b border-c text-left">
-                                <th class="px-4 py-3.5 text-xs uppercase tracking-wider text-muted font-semibold w-10">
-                                    #
+                                <th class="px-3 py-3.5 text-xs uppercase tracking-wider text-muted font-semibold">#
                                 </th>
                                 <th class="px-3 py-3.5 text-xs uppercase tracking-wider text-muted font-semibold">
                                     Company</th>
                                 <th class="px-3 py-3.5 text-xs uppercase tracking-wider text-muted font-semibold">
-                                    Status
-                                </th>
+                                    Status</th>
                                 <th class="px-3 py-3.5 text-xs uppercase tracking-wider text-muted font-semibold">Price
                                     Band</th>
                                 <th class="px-3 py-3.5 text-xs uppercase tracking-wider text-muted font-semibold">GMP
@@ -508,7 +609,7 @@
                                     Listing</th>
                                 <th
                                     class="px-3 py-3.5 text-xs uppercase tracking-wider text-muted font-semibold text-center">
-                                    Allotment Check</th>
+                                    Check</th>
                             </tr>
                         </thead>
                         <tbody id="ipoTbody">
@@ -517,11 +618,25 @@
                                     $status = $ipo['status'] ?? 'unknown';
                                     $gmp = $ipo['gmp_value'] ?? 0;
                                     $gmpPct = $ipo['gmp_percent'] ?? 0;
-                                @endphp
-                                <tr class="ipo-row row-hover border-b border-c" data-status="{{ $status }}"
-                                    data-name="{{ strtolower($ipo['name'] ?? '') }}">
+                                    $rawName = $ipo['name'] ?? '';
 
-                                    <td class="px-4 py-3.5 text-muted text-xs">{{ $i + 1 }}</td>
+                                    // CHANGE 2: Detect type from name string
+                                    $ipoType = 'other';
+                                    if (stripos($rawName, 'mainboard') !== false) {
+                                        $ipoType = 'mainboard';
+                                    } elseif (stripos($rawName, 'sme') !== false) {
+                                        $ipoType = 'sme';
+                                    }
+
+                                    // CHANGE 3: Strip "(Mainboard)" / "(SME)" from display name
+                                    $displayName = trim(preg_replace('/\s*\((Mainboard|SME)\)\s*/i', '', $rawName));
+                                @endphp
+
+                                {{-- CHANGE 4: Add data-type attribute --}}
+                                <tr class="ipo-row row-hover border-b border-c" data-status="{{ $status }}"
+                                    data-type="{{ $ipoType }}" data-name="{{ strtolower($rawName) }}">
+
+                                    <td class="px-3 py-3.5 text-muted text-xs">{{ $i + 1 }}</td>
 
                                     <td class="px-3 py-3.5">
                                         <div class="flex items-center gap-2.5">
@@ -531,15 +646,25 @@
                                                     onerror="this.style.display='none'">
                                             @endif
                                             <div class="min-w-0">
+                                                {{-- CHANGE 5: Show clean name + type badge below --}}
                                                 <a href="/ipo/{{ $ipo['id'] }}/{{ $ipo['slug'] }}"
                                                     class="font-semibold text-sm leading-tight hover:text-green-500 transition-colors"
-                                                    style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block">{{ $ipo['name'] ?? '—' }}</a>
-                                                @if (!empty($ipo['lead_managers']))
-                                                    <div class="text-xs text-muted mt-0.5"
-                                                        style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
-                                                        {{ implode(', ', array_slice($ipo['lead_managers'], 0, 1)) }}
-                                                    </div>
-                                                @endif
+                                                    style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block">
+                                                    {{ $displayName }}
+                                                </a>
+                                                <div class="flex items-center gap-1.5 mt-0.5">
+                                                    @if ($ipoType === 'mainboard')
+                                                        <span class="badge-mainboard">Mainboard</span>
+                                                    @elseif ($ipoType === 'sme')
+                                                        <span class="badge-sme">SME</span>
+                                                    @endif
+                                                    @if (!empty($ipo['lead_managers']))
+                                                        <span class="text-xs text-muted"
+                                                            style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
+                                                            {{ implode(', ', array_slice($ipo['lead_managers'], 0, 1)) }}
+                                                        </span>
+                                                    @endif
+                                                </div>
                                             </div>
                                         </div>
                                     </td>
@@ -636,9 +761,20 @@
                         $status = $ipo['status'] ?? 'unknown';
                         $gmp = $ipo['gmp_value'] ?? 0;
                         $gmpPct = $ipo['gmp_percent'] ?? 0;
+                        $rawName = $ipo['name'] ?? '';
+                        $ipoType = 'other';
+                        if (stripos($rawName, 'mainboard') !== false) {
+                            $ipoType = 'mainboard';
+                        } elseif (stripos($rawName, 'sme') !== false) {
+                            $ipoType = 'sme';
+                        }
+                        $displayName = trim(preg_replace('/\s*\((Mainboard|SME)\)\s*/i', '', $rawName));
                     @endphp
+
+                    {{-- CHANGE 6: data-type on mobile cards too --}}
                     <div class="bg-card-d border border-c rounded-2xl p-4 mobile-ipo-card"
-                        data-status="{{ $status }}" data-name="{{ strtolower($ipo['name'] ?? '') }}">
+                        data-status="{{ $status }}" data-type="{{ $ipoType }}"
+                        data-name="{{ strtolower($rawName) }}">
 
                         <div class="flex items-start gap-3 mb-3">
                             @if (!empty($ipo['icon_url']))
@@ -648,11 +784,20 @@
                             @endif
                             <div class="flex-1 min-w-0">
                                 <a href="/ipo/{{ $ipo['id'] }}/{{ $ipo['slug'] }}"
-                                    class="font-semibold text-main text-sm leading-snug hover:text-green-500 transition-colors block">{{ $ipo['name'] ?? '—' }}</a>
-                                @if (!empty($ipo['lead_managers']))
-                                    <div class="text-xs text-muted mt-0.5 truncate">
-                                        {{ implode(', ', array_slice($ipo['lead_managers'], 0, 1)) }}</div>
-                                @endif
+                                    class="font-semibold text-main text-sm leading-snug hover:text-green-500 transition-colors block">
+                                    {{ $displayName }}
+                                </a>
+                                <div class="flex items-center gap-1.5 mt-0.5">
+                                    @if ($ipoType === 'mainboard')
+                                        <span class="badge-mainboard">Mainboard</span>
+                                    @elseif ($ipoType === 'sme')
+                                        <span class="badge-sme">SME</span>
+                                    @endif
+                                    @if (!empty($ipo['lead_managers']))
+                                        <span
+                                            class="text-xs text-muted truncate">{{ implode(', ', array_slice($ipo['lead_managers'], 0, 1)) }}</span>
+                                    @endif
+                                </div>
                             </div>
                             @php
                                 $badgeClass =
@@ -668,7 +813,7 @@
                             </span>
                         </div>
 
-                        <div class="grid grid-cols-3 gap-2 text-xs">
+                        <div class="grid grid-cols-3 mobile-grid gap-2 text-xs" style="min-width:0">
                             <div class="inner-bg rounded-xl p-2.5">
                                 <div class="text-muted mb-1">Price Band</div>
                                 <div class="font-bold text-main text-sm">₹{{ $ipo['price_band'] ?? '—' }}</div>
@@ -728,7 +873,6 @@
                     <div class="text-center py-16 text-muted">No IPO data available.</div>
                 @endforelse
             </div>
-
             <div class="mt-3 text-center text-xs text-muted" id="mobileCount">Showing {{ count($data) }} IPOs</div>
         </section>
 
@@ -750,67 +894,77 @@
         const iconMoon = document.getElementById('iconMoon');
 
         function applyTheme(dark) {
-            if (dark) {
-                html.classList.add('dark');
-                iconMoon.classList.remove('hidden');
-                iconSun.classList.add('hidden');
-                toggle.checked = true;
-            } else {
-                html.classList.remove('dark');
-                iconSun.classList.remove('hidden');
-                iconMoon.classList.add('hidden');
-                toggle.checked = false;
-            }
+            dark ? html.classList.add('dark') : html.classList.remove('dark');
+            iconMoon.classList.toggle('hidden', !dark);
+            iconSun.classList.toggle('hidden', dark);
+            toggle.checked = dark;
         }
-
-        // Light default
         applyTheme(false);
-
         toggle.addEventListener('change', () => applyTheme(toggle.checked));
 
-
-        // ─── FILTER ───
+        // ─── STATE ───
         let currentStatus = 'all';
+        let currentType = 'all'; // NEW: 'all' | 'mainboard' | 'sme'
         let currentSearch = '';
 
         const allRows = [...document.querySelectorAll('#ipoTbody tr[data-status]')];
         const allCards = [...document.querySelectorAll('.mobile-ipo-card')];
 
+        // ─── STATUS FILTER ───
         function filterStatus(status) {
             currentStatus = status;
             ['all', 'open', 'upcoming', 'closed'].forEach(s => {
                 const btn = document.getElementById('tab-' + s);
                 if (!btn) return;
-                if (s === status) {
-                    btn.classList.add('tab-active');
-                    btn.classList.remove('tab-idle');
-                } else {
-                    btn.classList.remove('tab-active');
-                    btn.classList.add('tab-idle');
-                }
+                btn.classList.toggle('tab-active', s === status);
+                btn.classList.toggle('tab-idle', s !== status);
             });
             applyFilters();
         }
 
+        // ─── TYPE FILTER (NEW) ───
+        function filterType(type) {
+            currentType = type;
+            ['all', 'mainboard', 'sme'].forEach(t => {
+                const btn = document.getElementById('type-' + t);
+                if (!btn) return;
+                btn.classList.toggle('tab-active', t === type);
+                btn.classList.toggle('tab-idle', t !== type);
+            });
+            applyFilters();
+        }
+
+        // ─── APPLY ALL FILTERS ───
         function applyFilters() {
             const q = currentSearch.toLowerCase();
             let visible = 0;
 
+            function matches(el) {
+                const statusOk = currentStatus === 'all' || el.dataset.status === currentStatus;
+                // data-type is set by PHP: 'mainboard' | 'sme' | 'other'
+                // When filter is 'mainboard' or 'sme' only show that type;
+                // 'other' (unknown type) always shows under 'all'
+                const typeOk = currentType === 'all' || el.dataset.type === currentType;
+                const searchOk = el.dataset.name.includes(q);
+                return statusOk && typeOk && searchOk;
+            }
+
             allRows.forEach(row => {
-                const ok = (currentStatus === 'all' || row.dataset.status === currentStatus) &&
-                    row.dataset.name.includes(q);
+                const ok = matches(row);
                 row.style.display = ok ? '' : 'none';
                 if (ok) visible++;
             });
 
             allCards.forEach(card => {
-                const ok = (currentStatus === 'all' || card.dataset.status === currentStatus) &&
-                    card.dataset.name.includes(q);
-                card.style.display = ok ? '' : 'none';
+                card.style.display = matches(card) ? '' : 'none';
             });
 
-            document.getElementById('rowCount').textContent = `Showing ${visible} IPOs`;
-            document.getElementById('mobileCount').textContent = `Showing ${visible} IPOs`;
+            const label = `Showing ${visible} IPOs`;
+            document.getElementById('rowCount').textContent = label;
+            document.getElementById('mobileCount').textContent = label;
+
+            const fc = document.getElementById('filterCount');
+            if (fc) fc.textContent = visible + ' result' + (visible !== 1 ? 's' : '');
         }
 
         // ─── SEARCH ───

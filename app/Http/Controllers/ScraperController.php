@@ -13,6 +13,7 @@ class ScraperController extends Controller
     public function index()
     {
         $data = $this->scraper->scrapeIpoList(100);
+        // info($data);
         //    dd($data);
 
         return view('ipo.index', compact('data'));
@@ -25,6 +26,7 @@ class ScraperController extends Controller
         // dd($data);
         return view('ipo.detail', compact('data'));
     }
+
 
     // GET /api/ipo/all — all 1102 records (slow, use with cache)
     public function all(): JsonResponse
@@ -54,6 +56,7 @@ class ScraperController extends Controller
     public function open(): JsonResponse
     {
         $data = $this->scraper->getOpenIpos();
+        // info($data);
 
         return response()->json([
             'success' => true,
