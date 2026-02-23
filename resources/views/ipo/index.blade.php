@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    {{-- <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}"> --}}
+    <link rel="icon" type="image/x-icon" href="{{ asset('logo.ico') }}">
+
     {{-- Primary Meta --}}
     <title>Prime IPO – Live IPO GMP, Upcoming & Closed IPOs India</title>
     <meta name="description"
